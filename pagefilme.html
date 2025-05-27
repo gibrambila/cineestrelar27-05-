@@ -274,28 +274,64 @@
     </script>
 
 </head>
-<ul class="avaliacao">
-    <a>AVALIE</a>
-      <li class="star-icon ativo" data-avaliacao="1"></li>
-      <li class="star-icon" data-avaliacao="2"></li>
-      <li class="star-icon" data-avaliacao="3"></li>
-      <li class="star-icon" data-avaliacao="4"></li>
-      <li class="star-icon" data-avaliacao="5"></li>
-    </ul>
+ <div class="rating-container">
+        <h2>Avalie nosso produto</h2>
+        <div class="stars">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <button id="submit-rating">Enviar Avaliação</button>
+        <p class="feedback"></p>
+    </div>
 
-    <script>
-        var stars = document.querySelectorAll('.star-icon');
-                  
-document.addEventListener('click', function(e){
-  var classStar = e.target.classList;
-  if(!classStar.contains('ativo')){
-    stars.forEach(function(star){
-      star.classList.remove('ativo');
-    });
-    classStar.add('ativo');
-    console.log(e.target.getAttribute('data-avaliacao'));
-  }
-});
+
+     <script>
+        const stars = document.querySelectorAll('.star');
+        let selectedRating = 0;
+
+        // Marcar as estrelas ao passar o mouse
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.getAttribute('data-value'));
+                updateStars();
+            });
+            star.addEventListener('mouseover', () => {
+                const hoverValue = parseInt(star.getAttribute('data-value'));
+                updateStars(hoverValue);
+            });
+            star.addEventListener('mouseout', () => {
+                updateStars();
+            });
+        });
+
+        // Atualizar as estrelas com base na avaliação selecionada
+        function updateStars(hoverValue = selectedRating) {
+            stars.forEach(star => {
+                const starValue = parseInt(star.getAttribute('data-value'));
+                if (starValue <= hoverValue) {
+                    star.classList.add('selected');
+                } else {
+                    star.classList.remove('selected');
+                }
+            });
+        }
+
+        // Enviar avaliação
+        const submitButton = document.getElementById('submit-rating');
+        const feedbackElement = document.querySelector('.feedback');
+
+        submitButton.addEventListener('click', () => {
+            if (selectedRating === 0) {
+                feedbackElement.textContent = 'Por favor, selecione uma avaliação!';
+                feedbackElement.style.color = 'red';
+            } else {
+                feedbackElement.textContent = `Obrigado por avaliar com ${selectedRating} estrela(s)!`;
+                feedbackElement.style.color = 'green';
+            }
+        });
     </script>
  
 </body>
